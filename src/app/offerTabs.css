@@ -1,0 +1,37 @@
+/* OfferTabs.module.css */
+
+.offerTabs {
+  border-radius: 20px !important;
+  max-width: 20px;
+  text-transform: none;
+  /* Optional for hover */
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+}
+
+.offerTabs:hover {
+  background-color: #90caf9; /* Example hover color */
+  color: white;
+}
+
+.offerTabs.tabSelected {
+  background-color: #93bee9; /* Example selected color */
+  color: white;
+}
+
+
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;     /* Firefox */
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;             /* Chrome, Safari and Opera */
+}
+.hide-scrollbar {
+          scrollbar-width: none; /* Firefox */
+          -ms-overflow-style: none; /* IE 10+ */
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+          display: none; /* Chrome, Safari, Opera */
+        }
