@@ -1,8 +1,21 @@
-export interface Tour {
-  tour_operator: string; // ObjectId as string
-  title: string;
-  isDeleted?: boolean; // optional since it has a default
+// types/TourTypes.ts
+
+export interface ItineraryItem {
+  _id: string;
+  step: number;
+  day: string;
   description: string;
+}
+
+export interface Tour {
+  userid: string;
+  operatorId: string;
+  _id: string;
+  tour_operator: string;
+  title: string;
+  isDeleted?: boolean;
+  description: string;
+  price: number;
   activityTypes: string;
   tourType: 'Adventure' | 'Cultural' | 'Wildlife' | 'Leisure' | 'Historical' | 'Other';
   duration: number;
@@ -10,11 +23,17 @@ export interface Tour {
   destination: string;
   coordinates: {
     type: 'Point';
-    coordinates: [number, number]; // [longitude, latitude]
+    coordinates: [number, number];
   };
   images: string[];
-  itinerary: {
-    step?: number;
-    description: string;
-  }[];
+  itinerary?: ItineraryItem[];
+}
+export interface HomeTours {
+  _id:string,
+  destination:string
+  title: string;
+  duration:string,
+  images:string[],
+  price:string,
+
 }

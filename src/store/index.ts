@@ -1,10 +1,15 @@
 'use client'
 import { configureStore } from '@reduxjs/toolkit'
 import  { tourSlice } from '../store/Tours'
-
+import { reviewSlice } from './Reviews'
+import { bookingSlice } from './Booking'
+import { itinerarySlice } from './Itinerary'
 export const store = configureStore({
   reducer: {
     tour: tourSlice.reducer,
+    review: reviewSlice.reducer,
+    booking: bookingSlice.reducer,
+    itinerary:itinerarySlice.reducer
 
   },
 })

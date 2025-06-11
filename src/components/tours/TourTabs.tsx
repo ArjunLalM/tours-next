@@ -23,7 +23,7 @@ const TourTabs = () => {
     <Box sx={{ width: '100%', bgcolor: 'background.paper' }}>
       <Tabs value={value} onChange={handleChange} centered  TabIndicatorProps={{ style: { display: 'none' } }}>
 
-        <Tab className='offerTabs' label="Overview" />
+        <Tab className='offerTabs' label="Description" />
         <Tab className='offerTabs' label="Day wise Itinerary"/>
         <Tab className='offerTabs' label="Inclusion/Exclusions" />
         <Tab className='offerTabs' label="Additional Info" />

@@ -2,46 +2,13 @@
 
 import { useRef } from 'react';
 import { ChevronLeft, ChevronRight, Star } from 'lucide-react';
+import { Reviews } from '@/types/ReviewType';
 
-const reviews = [
-  {
-    user: 'Arjunlal',
-    rating: 5,
-    review: 'Amazing service and fast booking experience. Highly recommend!',
-  },
-  {
-    user: 'Nithin Raj',
-    rating: 4,
-    review: 'Smooth process and great offers available on forex cards.',
-  },
-  {
-    user: 'Divya',
-    rating: 5,
-    review: 'The support team was really helpful. Loved the experience.',
-  },
-  {
-    user: 'Ramesh',
-    rating: 3,
-    review: 'It was okay, but could be improved with more package options.',
-  },
-  {
-    user: 'Sneha S',
-    rating: 5,
-    review: 'Best travel platform I’ve used so far. Will use again!',
-  },
-  {
-    user: 'Anil ',
-    rating: 4,
-    review: 'Quick and reliable. The group package was wonderful.',
-  },
-  {
-    user: 'Lakshmi',
-    rating: 5,
-    review: 'Excellent service. Everything was smooth and efficient.',
-  },
-];
+interface OfferReviewCarouselProps {
+  reviews:Reviews[]; 
+}
 
-const ReviewCarousel = () => {
+const ReviewCarousel = ({reviews}:OfferReviewCarouselProps) => {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const scroll = (direction: 'left' | 'right') => {
@@ -76,21 +43,21 @@ const ReviewCarousel = () => {
         ref={scrollRef}
         className="flex space-x-4 overflow-x-auto scroll-smooth no-scrollbar pb-6"
       >
-        {reviews.map((item, idx) => (
+        {reviews&&reviews.map((item) => (
           <div
-            key={idx}
+            key={item._id}
             className="min-w-[360px] max-w-sm bg-white rounded-2xl shadow-md p-5 flex flex-col justify-between"
           >
             {/* Username */}
-            <h3 className="text-md font-bold text-gray-800 mb-1">{item.user}</h3>
-
+            <h3 className="text-md font-bold text-gray-800 mb-1">{item.user?.firstName}</h3>
+             <p className="text-md font-semi-bold text-gray-700 mb-1">{item.tour?.title}</p>
             {/* Rating */}
             <div className="flex items-center mb-2">
               {[...Array(5)].map((_, i) => (
                 <Star
                   key={i}
                   className={`w-4 h-4 mr-1 ${
-                    i < item.rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'
+                    i < item.ratings ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'
                   }`}
                 />
               ))}

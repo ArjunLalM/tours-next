@@ -1,4 +1,3 @@
-
 "use client";
 import React, { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
@@ -10,7 +9,6 @@ import { useDispatch } from "react-redux";
 import { AddTourAction } from "@/store/Tours";
 import { AppDispatch } from "@/store";
 import { toast } from "react-toastify";
-
 
 const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 
@@ -35,7 +33,15 @@ const schema = yup.object().shape({
     .required("Availability is required")
     .positive()
     .integer(),
-  activityType: yup.string().required("Activity Type is required"),
+  activityTypes: yup.string().required("Activity Type is required"),
+  latitude: yup
+    .number()
+    .required("Latitude is required")
+    .typeError("Latitude must be a number"),
+  longitude: yup
+    .number()
+    .required("Longitude is required")
+    .typeError("Longitude must be a number"),
 });
 
 type FormData = {
@@ -45,15 +51,17 @@ type FormData = {
   duration: number;
   price: number;
   availability: number;
-  activityType: string;
+  activityTypes: string;
+  latitude: number;
+  longitude: number;
 };
 
 type TourAddingForm = {
- onSave:() => void;
+  onSave: () => void;
   handleClose: () => void;
 };
 
-const AddToursForm = ({ onSave ,handleClose}: TourAddingForm) => {
+const AddToursForm = ({ onSave, handleClose }: TourAddingForm) => {
   const [itinerary, setItinerary] = useState([""]);
   const [richText, setRichText] = useState("");
   const [images, setImages] = useState<File[]>([]);
@@ -94,32 +102,47 @@ const AddToursForm = ({ onSave ,handleClose}: TourAddingForm) => {
       setImages(fileArray);
     }
   };
-  
-    const useAppDispatch = useDispatch.withTypes<AppDispatch>()
-  // const useAppSelector = useSelector.withTypes<RootState>()
-   const dispatch = useAppDispatch();
+
+  const useAppDispatch = useDispatch.withTypes<AppDispatch>();
+  const dispatch = useAppDispatch();
 
   const onSubmit = (data: FormData) => {
-    try{
-    const formData = new FormData();
-    formData.append("title", data.title);
-    formData.append("description", data.description);
-    formData.append("destination", data.destination);
-    formData.append("duration", data.duration.toString());
-    formData.append("price", data.price.toString());
-    formData.append("availability", data.availability.toString());
-    formData.append("activityType", data.activityType);
-    formData.append("itinerary", JSON.stringify(itinerary));
-    images.forEach((files) => {
-      formData.append("cover_images", files);
-    });
-    console.log(formData,"1111111111111111111")
-    dispatch(AddTourAction(formData));
-      toast.success("Book added successfully!");
-     onSave()
-  }catch{
-    toast.error("Failed to add book. Please try again.");
-  }
+    try {
+      const formData = new FormData();
+      formData.append("title", data.title);
+      formData.append("description", data.description);
+      formData.append("destination", data.destination);
+      formData.append("duration", data.duration.toString());
+      formData.append("price", data.price.toString());
+      formData.append("availability", data.availability.toString());
+      formData.append("activityTypes", data.activityTypes);
+
+      // Add coordinates
+      const coordinates = {
+        type: "Point",
+        coordinates: [Number(data.longitude), Number(data.latitude)],
+      };
+      formData.append("coordinates", JSON.stringify(coordinates));
+
+      // Add itinerary
+      const formattedItinerary = itinerary.map((desc, index) => ({
+        step: index + 1,
+        description: desc,
+      }));
+      formData.append("itinerary", JSON.stringify(formattedItinerary));
+
+      // Add images
+      images.forEach((file) => {
+        formData.append("cover_image", file);
+      });
+
+      dispatch(AddTourAction(formData));
+      toast.success("Tour added successfully!");
+      onSave();
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to add tour. Please try again.");
+    }
   };
 
   return (
@@ -232,18 +255,52 @@ const AddToursForm = ({ onSave ,handleClose}: TourAddingForm) => {
             <label className="block text-sm font-medium mb-1">Activity Type</label>
             <select
               className="w-full border border-gray-300 rounded px-4 py-2"
-              {...register("activityType")}
+              {...register("activityTypes")}
             >
               <option value="">Select activity type</option>
               <option value="Adventure">Adventure</option>
               <option value="Nature">Nature</option>
               <option value="Cultural">Cultural</option>
             </select>
-            {errors.activityType && (
+            {errors.activityTypes && (
               <p className="text-red-600 text-sm mt-1">
-                {errors.activityType.message}
+                {errors.activityTypes.message}
               </p>
             )}
+          </div>
+
+          {/* Coordinates */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium mb-1">Latitude</label>
+              <input
+                type="number"
+                step="any"
+                className="w-full border border-gray-300 rounded px-4 py-2"
+                placeholder="Enter latitude"
+                {...register("latitude")}
+              />
+              {errors.latitude && (
+                <p className="text-red-600 text-sm mt-1">
+                  {errors.latitude.message}
+                </p>
+              )}
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Longitude</label>
+              <input
+                type="number"
+                step="any"
+                className="w-full border border-gray-300 rounded px-4 py-2"
+                placeholder="Enter longitude"
+                {...register("longitude")}
+              />
+              {errors.longitude && (
+                <p className="text-red-600 text-sm mt-1">
+                  {errors.longitude.message}
+                </p>
+              )}
+            </div>
           </div>
 
           {/* Highlight Upload */}
