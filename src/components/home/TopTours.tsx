@@ -8,7 +8,7 @@ interface TopTourProps {
 
 const TopTours = ({ topTours }: TopTourProps) => {
   return (
-    <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 justify-items-center">
+    <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 justify-items-center">
       {topTours.map((tour) => (
         <div
           key={tour._id}

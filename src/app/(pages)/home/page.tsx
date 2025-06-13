@@ -50,9 +50,7 @@ const Page = () => {
   Top Tours
 </h1>
 <TopTours topTours ={topTours}/>
-<div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 justify-items-center">
 
-</div>
 <div className="flex justify-center">
  <Link href="/tours/list">
   <button className="px-4 py-3 bg-blue-500 text-white rounded-full mt-6">
