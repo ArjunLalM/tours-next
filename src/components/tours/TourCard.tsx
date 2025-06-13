@@ -3,8 +3,10 @@
 import React, { useEffect, useState } from "react";
 import EditToursForm from "./EditToursForm";
 import { Tour } from "@/types/TourTypes";
-
-
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/store";
+import { toast } from 'react-toastify';
+import { deleteTour } from '@/store/Tours';
 interface TourCardProps {
   tour: Tour;
   tourId: string;
@@ -12,6 +14,7 @@ interface TourCardProps {
 
 const TourCard: React.FC<TourCardProps> = ({ tour, tourId }) => {
   console.log(tourId)
+  const dispatch = useDispatch<AppDispatch>();
   const [showForm, setShowForm] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
 
@@ -19,7 +22,19 @@ const TourCard: React.FC<TourCardProps> = ({ tour, tourId }) => {
     const id = localStorage.getItem("userId");
     setUserId(id);
   }, []);
+const handleDeleteTour = async (tourId: string) => {
+  try {
+    const confirmDelete = window.confirm("Are you sure you want to delete this tour?");
+    if (!confirmDelete) return;
 
+    await dispatch(deleteTour({ tourId })); // pass the tourId in correct format
+    toast.success("Tour deleted successfully!");
+    // Optionally, you can refresh the list or remove the card from UI
+  } catch  {
+    console.error("Error deleting tour:");
+    toast.error("Failed to delete tour");
+  }
+};
   const isOwner = userId === tour.tour_operator;
 
   return (
@@ -92,7 +107,7 @@ const TourCard: React.FC<TourCardProps> = ({ tour, tourId }) => {
       </button>
 
       <button
-        // onClick={() => handleDeleteTour(tour._id)}
+        onClick={() => handleDeleteTour(tourId)}
         className="w-1/2 inline-flex justify-center items-center px-3 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-300"
       >
         Delete Tour

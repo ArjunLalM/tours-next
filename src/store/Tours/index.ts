@@ -206,7 +206,22 @@ export const TourAvailableAction = createAsyncThunk(
   }
 );
 
+//Delete 
+export const  deleteTour = createAsyncThunk(
+  'tours/tourDelete',
+  async (data: any , { }: Redux) => {
+    const storedToken = localStorage.getItem('token');
+    const headers = {
+      headers: {
+        Authorization: `Bearer ${storedToken}`,
+        "content-type": "application/json", 
+      },
+    };
 
+    const response = await axios.patch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/tours/delete`, data, headers);
+    return response.data;
+  }
+);
 
 export const tourSlice = createSlice({
   name: 'tour',
@@ -231,6 +246,21 @@ export const tourSlice = createSlice({
         state.loading = false
         state.isRefresh = false;
         state.error = action.payload
+    })
+        //Delete
+    .addCase( deleteTour.fulfilled, (state) => {
+      state.loading = false;
+      state.isRefresh = false;
+      state.error = "";
+    })
+    .addCase( deleteTour.pending, (state) => {
+      state.loading = true;
+      state.isRefresh = true;
+    })
+    .addCase( deleteTour.rejected, (state, action: PayloadAction<any>) => {
+      state.loading = false;
+      state.error = action.payload;
+      state.isRefresh = false;
     })
     //reducer for update tour
         .addCase(EditTourAction.fulfilled, (state) => {
