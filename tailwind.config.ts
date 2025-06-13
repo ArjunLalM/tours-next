@@ -8,6 +8,6 @@ module.exports = {
   theme: {
     extend: {},
   },
-  darkMode: false,  // <-- KEY FIX FOR YOUR PROBLEM
+  darkMode: 'class',  
   plugins: [],
 }
